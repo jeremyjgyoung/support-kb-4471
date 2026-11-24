@@ -14,39 +14,43 @@ signature: jeremyjgyoung
 
   const REPO = 'https://github.com/jeremyjgyoung/support-kb-4471/issues';
   const tickets = {
-    parser: { label: 'issue 1', href: `${REPO}/1` },
-    hint: { label: 'issue 2', href: `${REPO}/2` },
-    'day-shift': { label: 'issue 3', href: `${REPO}/3` },
+    parser: { label: 'issue 1', href: `${REPO}/1`, state: 'closed · fixed', open: false },
+    hint: { label: 'issue 2', href: `${REPO}/2`, state: "closed · won't fix, booking-v3 retired", open: false },
+    'day-shift': { label: 'issue 3', href: `${REPO}/3`, state: 'open · no fix', open: true },
   };
 </script>
 
-[#4471](/kb/incidents/4471) is marked **known: one issue, one fix queued**. Read the reports, not
-their subject lines, and it holds three problems. The queued parser fix closes one of them.
+[#4471](/kb/incidents/4471) was marked **known: one issue, one fix queued**, and engineering
+closed it on 5 October. Read the reports, not their subject lines, and it held three problems.
+Engineering's update settles two of them. The third is still open.
 
 <Callout kind="warn">
-Do not close #4471 when the parser fix ships. Two of its problems need fixes of their own.
+#4471 is closed, but dates still move by one day. Reports that say "one day off" are
+<code>day-shift</code>: file them on issue 3, not on #4471.
 </Callout>
 
-## What #4471 holds
+## What #4471 held
 
 <SplitTable ticket={4471} {tickets} />
 
 ## The three problems
 
-**`parser`: the shared parser reads every date month first.** A tenant whose locale writes the
-day first gets day and month swapped: "Booked for 2 July. The invite says 7 February." This is
-the bug #4471 names, and the queued fix is for it. Every tenant on file is day first.
+**`parser`: the shared parser read every date month first.** A tenant whose locale writes the
+day first got day and month swapped: "Booked for 2 July. The invite says 7 February." This is
+the bug #4471 names. **Fixed** on 5 October: `fix(dates): parse dd/mm for eu locales`.
 
-**`hint`: the booking-v3 form tells people to type the month first.** Its date field prints
-`MM/DD/YYYY`. People at a day-first tenant on booking-v3 type what the hint says, and the form
-reads it the tenant's way, day first. Same swap, different bug: the parser fix does not touch
-the form's hint. Only reports sent through the form, at a booking-v3 tenant, are this.
+**`hint`: the booking-v3 form told people to type the month first.** Its date field printed
+`MM/DD/YYYY`. People at a day-first tenant on booking-v3 typed what the hint said, and the form
+read it the tenant's way, day first. Same swap, different bug: the parser fix does not touch
+the form. Only reports sent through the form, at a booking-v3 tenant, are this. **Won't fix**:
+the booking-v3 form is retired.
 
 **`day-shift`: the date moves by one day.** These dates are not swapped. "Tuesday 6 October
 showed as Monday." "Client in Lisbon got Tuesday. Client in Toronto got Monday. Same meeting."
-An invite that "arrived before I made the booking". The day depends on where the reader is:
-a time zone bug, not a format bug. [The cause table](/kb/incidents/4471) counts these under
-`parser` and footnotes them; the parser fix will not fix them.
+An invite that "arrived before I made the booking". The day depends on where the reader is: a
+time zone bug, not a format bug. The parser fix does not fix it, and the engineering update
+does not name it. **Open.** [The cause table](/kb/incidents/4471) files these reports under
+`parser` and only footnotes them, so they closed with #4471.
 
 ## How three became one
 
@@ -60,7 +64,7 @@ a time zone bug, not a format bug. [The cause table](/kb/incidents/4471) counts 
 
 ## What the desk does now
 
-- Keep #4471 for `parser` only. Move `hint` and `day-shift` reports to the tickets above.
+- Keep issue 3 open until engineering fixes the one-day shift. Tell them it survived #4471.
 - When a report says "one day off", read it before you merge it: that is `day-shift`.
 - Re-read [triage](/kb/triage/dedupe): it was last reviewed in 2024.
 
