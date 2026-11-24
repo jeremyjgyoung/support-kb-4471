@@ -1,0 +1,67 @@
+---
+layout: runbook
+title: '#4471 · three problems, one ticket'
+owner: support desk
+status: open
+reviewed: 2026-11-23
+signature: jeremyjgyoung
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const REPO = 'https://github.com/jeremyjgyoung/support-kb-4471/issues';
+  const tickets = {
+    parser: { label: 'issue 1', href: `${REPO}/1` },
+    hint: { label: 'issue 2', href: `${REPO}/2` },
+    'day-shift': { label: 'issue 3', href: `${REPO}/3` },
+  };
+</script>
+
+[#4471](/kb/incidents/4471) is marked **known: one issue, one fix queued**. Read the reports, not
+their subject lines, and it holds three problems. The queued parser fix closes one of them.
+
+<Callout kind="warn">
+Do not close #4471 when the parser fix ships. Two of its problems need fixes of their own.
+</Callout>
+
+## What #4471 holds
+
+<SplitTable ticket={4471} {tickets} />
+
+## The three problems
+
+**`parser`: the shared parser reads every date month first.** A tenant whose locale writes the
+day first gets day and month swapped: "Booked for 2 July. The invite says 7 February." This is
+the bug #4471 names, and the queued fix is for it. Every tenant on file is day first.
+
+**`hint`: the booking-v3 form tells people to type the month first.** Its date field prints
+`MM/DD/YYYY`. People at a day-first tenant on booking-v3 type what the hint says, and the form
+reads it the tenant's way, day first. Same swap, different bug: the parser fix does not touch
+the form's hint. Only reports sent through the form, at a booking-v3 tenant, are this.
+
+**`day-shift`: the date moves by one day.** These dates are not swapped. "Tuesday 6 October
+showed as Monday." "Client in Lisbon got Tuesday. Client in Toronto got Monday. Same meeting."
+An invite that "arrived before I made the booking". The day depends on where the reader is:
+a time zone bug, not a format bug. [The cause table](/kb/incidents/4471) counts these under
+`parser` and footnotes them; the parser fix will not fix them.
+
+## How three became one
+
+- [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on the **subject line** and
+  nobody reads the body. Every report here has a subject that says "wrong day" in some form, so
+  all three problems went into one ticket. The decision planned for one bug under different
+  words; it did not plan for different bugs under the same words.
+- Intake's tag is a guess from the reporter's browser. The cause depends on the tenant and the
+  way in (`causes.ts`). The two disagree, so the tag cannot split the ticket.
+- The export repeats reports across its pages. Count by id.
+
+## What the desk does now
+
+- Keep #4471 for `parser` only. Move `hint` and `day-shift` reports to the tickets above.
+- When a report says "one day off", read it before you merge it: that is `day-shift`.
+- Re-read [triage](/kb/triage/dedupe): it was last reviewed in 2024.
+
+<RenderStamp {signature} />
