@@ -4,7 +4,7 @@ title: '#4471 · three problems, one ticket'
 owner: support desk
 status: open
 reviewed: 2026-11-23
-signature: jeremyjgyoung
+signature: v1.eyJzdWIiOiIxMjA3IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTU0ODE5MjgsImV4cCI6MTc5NTU2ODMyOH0.sg0F4y_pkLznfW3S_gfS7J7ZJkHv84Xd1sr8oSWVBjs
 ---
 
 <script>
